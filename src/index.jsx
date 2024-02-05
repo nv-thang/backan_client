@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import { BrowserRouter as Router } from "react-router-dom"
+import { BrowserRouter as Router, HashRouter } from "react-router-dom"
 import { PrimeReactProvider } from "primereact/api"
 // import "primereact/resources/themes/lara-light-indigo/theme.css" // theme
 // import "primeflex/primeflex.css" // css utility
@@ -14,11 +14,11 @@ import reportWebVitals from "./reportWebVitals"
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	<>
-		<Router basename={process.env.PUBLIC_URL}>
+		<HashRouter>
 			<PrimeReactProvider>
 				<App />
 			</PrimeReactProvider>
-		</Router>
+		</HashRouter>
 	</>
 )
 reportWebVitals()

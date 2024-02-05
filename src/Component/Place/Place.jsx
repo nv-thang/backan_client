@@ -25,7 +25,11 @@ export default function Place() {
 	const toast = useRef(null)
 
 	const fetchData = async () => {
-		const url = "http://localhost:4004/place/getAllPlace"
+		const url = `https://backanadmin.dmit.edu.vn:4004/place/getAllPlace`
+		console.log("hihi")
+
+		console.log("error", url)
+
 		try {
 			const response = await fetch(url)
 			const results = await response.json()
@@ -66,7 +70,7 @@ export default function Place() {
 	const handleEditClick = async (rowData) => {
 		clearForm()
 		setId(rowData.id)
-		const url = `http://localhost:4004/place/getPlaceById?id=${rowData.id}`
+		const url = `{process.env.API_URL}/place/getPlaceById?id=${rowData.id}`
 
 		const response = await fetch(url)
 		const results = await response.json()
@@ -83,7 +87,7 @@ export default function Place() {
 	}
 
 	const handleDeleteClick = async (rowData) => {
-		const url = `http://localhost:4004/place/deletePlace?id=${rowData.id}`
+		const url = `{process.env.API_URL}/place/deletePlace?id=${rowData.id}`
 
 		const response = await fetch(url, {
 			method: "DELETE",
@@ -100,7 +104,7 @@ export default function Place() {
 
 	const handleSavePlace = async () => {
 		if (!id) {
-			const url = "http://localhost:4004/place/createPlace"
+			const url = "{process.env.API_URL}/place/createPlace"
 			const place = {
 				place_name: place_name,
 				address: address,
@@ -126,7 +130,7 @@ export default function Place() {
 				toast.current.show({ severity: "success", summary: "Info", detail: "Place is created" })
 			}
 		} else {
-			const url = `http://localhost:4004/place/updatePlace?id=${id}`
+			const url = `{process.env.API_URL}/place/updatePlace?id=${id}`
 			const place = {
 				place_name: place_name,
 				address: address,

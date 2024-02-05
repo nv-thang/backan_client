@@ -21,7 +21,7 @@ export default function APIs() {
 	const toast = useRef(null)
 
 	const fetchData = async () => {
-		const url = "http://localhost:4004/user/getAllUser"
+		const url = "{process.env.API_URL}/user/getAllUser"
 		try {
 			const response = await fetch(url)
 			const results = await response.json()
@@ -52,7 +52,7 @@ export default function APIs() {
 
 	const handleSaveUser = async () => {
 		if (!id) {
-			const url = "http://localhost:4004/user/createUser"
+			const url = "{process.env.API_URL}/user/createUser"
 			const user = {
 				username: userName,
 				password: password,
@@ -76,7 +76,7 @@ export default function APIs() {
 				toast.current.show({ severity: "success", summary: "Info", detail: "User is created" })
 			}
 		} else {
-			const url = `http://localhost:4004/user/updateUser?id=${id}`
+			const url = `{process.env.API_URL}/user/updateUser?id=${id}`
 			const user = {
 				username: userName,
 				password: password,
@@ -103,7 +103,7 @@ export default function APIs() {
 	}
 
 	const handleDeleteUser = async (rowData) => {
-		const url = `http://localhost:4004/user/deleteUser?id=${rowData.id}`
+		const url = `{process.env.API_URL}/user/deleteUser?id=${rowData.id}`
 
 		const response = await fetch(url, {
 			method: "DELETE",
@@ -128,7 +128,7 @@ export default function APIs() {
 		clearForm()
 		setId(rowData.id)
 		const rowId = rowData.id
-		const url = `http://localhost:4004/user/getUserById?id=${rowId}`
+		const url = `{process.env.API_URL}/user/getUserById?id=${rowId}`
 
 		const response = await fetch(url)
 		const results = await response.json()

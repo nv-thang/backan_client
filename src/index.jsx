@@ -14,7 +14,7 @@ import reportWebVitals from "./reportWebVitals"
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
 	<>
-		<Router basename="/backan_client">
+		<Router basename={process.env.PUBLIC_URL}>
 			<PrimeReactProvider>
 				<App />
 			</PrimeReactProvider>

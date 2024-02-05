@@ -24,7 +24,7 @@ export default function Login() {
 	} = useForm({ defaultValues })
 
 	const onSubmit = async (data) => {
-		const url = `{process.env.API_URL}/user/getUserByUserName?username=${data.username}`
+		const url = `${process.env.REACT_APP_API_URL}/user/getUserByUserName?username=${data.username}`
 		try {
 			const response = await fetch(url)
 			const result = await response.json()

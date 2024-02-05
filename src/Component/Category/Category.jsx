@@ -66,7 +66,7 @@ export default function Category() {
 		clearForm()
 		setId(rowData.id)
 		const rowId = rowData.id
-		const url = `{process.env.API_URL}/category/getCategoryById?id=${rowId}`
+		const url = `${process.env.REACT_APP_API_URL}/category/getCategoryById?id=${rowId}`
 
 		const response = await fetch(url)
 		const results = await response.json()
@@ -78,7 +78,7 @@ export default function Category() {
 	}
 
 	const handleDeleteClick = async (rowData) => {
-		const url = `{process.env.API_URL}/category/deleteCategory?id=${rowData.id}`
+		const url = `${process.env.REACT_APP_API_URL}/category/deleteCategory?id=${rowData.id}`
 
 		const response = await fetch(url, {
 			method: "DELETE",
@@ -95,7 +95,7 @@ export default function Category() {
 
 	const handleSaveCategory = async () => {
 		if (!id) {
-			const url = "{process.env.API_URL}/category/createCategory"
+			const url = `${process.env.REACT_APP_API_URL}/category/createCategory`
 			const category = {
 				title: title,
 				is_select: selected.code,
@@ -115,7 +115,7 @@ export default function Category() {
 				toast.current.show({ severity: "success", summary: "Info", detail: "Category is created" })
 			}
 		} else {
-			const url = `{process.env.API_URL}/category/updateCategory?id=${id}`
+			const url = `${process.env.REACT_APP_API_URL}/category/updateCategory?id=${id}`
 			const category = {
 				title: title,
 				is_select: selected.code,

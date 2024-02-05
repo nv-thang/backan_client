@@ -18,7 +18,7 @@ export default function Cluster() {
 	const toast = useRef(null)
 
 	const fetchData = async () => {
-		const url = "{process.env.API_URL}/cluster/getAllCluster"
+		const url = `${process.env.REACT_APP_API_URL}/cluster/getAllCluster`
 		try {
 			const response = await fetch(url)
 			const results = await response.json()
@@ -53,7 +53,7 @@ export default function Cluster() {
 		clearForm()
 		setId(rowData.id)
 		const rowId = rowData.id
-		const url = `{process.env.API_URL}/cluster/getClusterById?id=${rowId}`
+		const url = `${process.env.REACT_APP_API_URL}/cluster/getClusterById?id=${rowId}`
 
 		const response = await fetch(url)
 		const results = await response.json()
@@ -64,7 +64,7 @@ export default function Cluster() {
 	}
 
 	const handleDeleteClick = async (rowData) => {
-		const url = `{process.env.API_URL}/cluster/deleteCluster?id=${rowData.id}`
+		const url = `${process.env.REACT_APP_API_URL}/cluster/deleteCluster?id=${rowData.id}`
 
 		const response = await fetch(url, {
 			method: "DELETE",
@@ -81,7 +81,7 @@ export default function Cluster() {
 
 	const handleSaveCluster = async () => {
 		if (!id) {
-			const url = "{process.env.API_URL}/cluster/createCluster"
+			const url = `${process.env.REACT_APP_API_URL}/cluster/createCluster`
 			const cluster = {
 				title: title,
 				image: image,
@@ -100,7 +100,7 @@ export default function Cluster() {
 				toast.current.show({ severity: "success", summary: "Info", detail: "Cluster is created" })
 			}
 		} else {
-			const url = `{process.env.API_URL}/cluster/updateCluster?id=${id}`
+			const url = `${process.env.REACT_APP_API_URL}/cluster/updateCluster?id=${id}`
 			const cluster = {
 				title: title,
 				image: image,

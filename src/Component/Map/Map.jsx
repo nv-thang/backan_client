@@ -75,8 +75,8 @@ export default function Map() {
 	const [globalFilterValue, setGlobalFilterValue] = useState("")
 
 	const fetchData = async () => {
-		const url = "{process.env.API_URL}/place/getAllPlace"
-		const urlRanhGioiHuyen = "{process.env.API_URL}/place/getRanhGioiHuyen"
+		const url = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
+		const urlRanhGioiHuyen = `${process.env.REACT_APP_API_URL}/place/getRanhGioiHuyen`
 
 		try {
 			const response = await fetch(url)

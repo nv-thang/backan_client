@@ -70,7 +70,7 @@ export default function Place() {
 	const handleEditClick = async (rowData) => {
 		clearForm()
 		setId(rowData.id)
-		const url = `{process.env.API_URL}/place/getPlaceById?id=${rowData.id}`
+		const url = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${rowData.id}`
 
 		const response = await fetch(url)
 		const results = await response.json()
@@ -87,7 +87,7 @@ export default function Place() {
 	}
 
 	const handleDeleteClick = async (rowData) => {
-		const url = `{process.env.API_URL}/place/deletePlace?id=${rowData.id}`
+		const url = `${process.env.REACT_APP_API_URL}/place/deletePlace?id=${rowData.id}`
 
 		const response = await fetch(url, {
 			method: "DELETE",
@@ -104,7 +104,7 @@ export default function Place() {
 
 	const handleSavePlace = async () => {
 		if (!id) {
-			const url = "{process.env.API_URL}/place/createPlace"
+			const url = `${process.env.REACT_APP_API_URL}/place/createPlace`
 			const place = {
 				place_name: place_name,
 				address: address,
@@ -130,7 +130,7 @@ export default function Place() {
 				toast.current.show({ severity: "success", summary: "Info", detail: "Place is created" })
 			}
 		} else {
-			const url = `{process.env.API_URL}/place/updatePlace?id=${id}`
+			const url = `${process.env.REACT_APP_API_URL}/place/updatePlace?id=${id}`
 			const place = {
 				place_name: place_name,
 				address: address,

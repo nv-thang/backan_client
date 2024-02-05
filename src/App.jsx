@@ -4,7 +4,14 @@ import "primeicons/primeicons.css"
 import "primereact/resources/primereact.css"
 
 // React router dom
-import { Routes, Route } from "react-router-dom"
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link
+} from "react-router-dom";
+
+
 
 // Component
 import GlobalStyles from "./Component/GlobalStyle"

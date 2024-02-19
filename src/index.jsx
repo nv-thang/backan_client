@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import {  HashRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import { PrimeReactProvider } from "primereact/api"
 // import "primereact/resources/themes/lara-light-indigo/theme.css" // theme
 // import "primeflex/primeflex.css" // css utility

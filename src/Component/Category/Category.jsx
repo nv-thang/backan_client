@@ -25,7 +25,7 @@ export default function Category() {
 	]
 
 	const fetchData = async () => {
-		const url = "https://backanadmin.dmit.edu.vn:4004/category/getAllCategory";
+		const url = `${process.env.REACT_APP_API_URL}/category/getAllCategory`
 		console.log("error", url)
 		try {
 			const response = await fetch(url)

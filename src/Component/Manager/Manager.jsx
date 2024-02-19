@@ -25,11 +25,10 @@ import Login from "../Login"
 
 export default function Manager() {
 	const navigate = useNavigate()
-	const isLoggedIn = localStorage.getItem("isLoggedIn")
+	const isLoggedIn = sessionStorage.getItem("isLoggedIn")
 
 	const handleLogout = () => {
-		localStorage.removeItem("accessToken")
-		localStorage.removeItem("isLoggedIn")
+		sessionStorage.removeItem("isLoggedIn")
 		navigate("/manager")
 	}
 

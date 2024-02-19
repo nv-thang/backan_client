@@ -16,10 +16,7 @@ import Reserve from "../../Storage/Images/reserve.png"
 import Terraces from "../../Storage/Images/terraces.png"
 import Adventure from "../../Storage/Images/adventure.png"
 
-import { FilterMatchMode } from "primereact/api"
-import { DataTable } from "primereact/datatable"
-import { Column } from "primereact/column"
-import { InputText } from "primereact/inputtext"
+import { Tree } from "primereact/tree"
 
 const LegendControl = () => {
 	const map = useMap()
@@ -68,11 +65,10 @@ const LegendControl = () => {
 export default function Map() {
 	const [places, setListPlace] = useState({})
 	const [places2, setListPlace2] = useState({})
-	const [list, setList] = useState()
+	const [treePlaceList, setTreePlaceList] = useState({})
 	const [geoJSONData, setGeoJSONData] = useState({})
+	const [selectedKeys, setSelectedKeys] = useState()
 	const mapRef = useRef()
-
-	const [globalFilterValue, setGlobalFilterValue] = useState("")
 
 	const fetchData = async () => {
 		const url = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
@@ -81,9 +77,9 @@ export default function Map() {
 		try {
 			const response = await fetch(url)
 			const results = await response.json()
-			setList(results)
 			const organizedData = {}
 			const organizedData2 = {}
+			const treeData = {}
 			results.forEach((point) => {
 				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
 
@@ -113,6 +109,17 @@ export default function Map() {
 				organizedData2[category][cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
 			})
 			setListPlace2(organizedData2)
+
+			results.forEach((point) => {
+				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
+
+				if (!treeData[cluster]) {
+					treeData[cluster] = []
+				}
+
+				treeData[cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
+			})
+			setTreePlaceList(treeData)
 		} catch (error) {
 			console.log("error", error)
 		}
@@ -211,43 +218,6 @@ export default function Map() {
 		}
 	}
 
-	const handleRowClick = (rowData) => {
-		console.log(rowData)
-		const lat = rowData.data.latitude
-		const long = rowData.data.longitude
-		mapRef.current.setView([lat, long], 15)
-		// const marker = renderMarker(rowData.data.id, rowData.data.place_name, lat, long, rowData.data.category, rowData.data.description)
-		// marker.bindPopup().openPopup()
-		// marker.openPopup()
-	}
-
-	const [filters, setFilters] = useState({
-		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-	})
-
-	const onGlobalFilterChange = (e) => {
-		const value = e.target.value
-		let _filters = { ...filters }
-
-		_filters["global"].value = value
-
-		setFilters(_filters)
-		setGlobalFilterValue(value)
-	}
-
-	const renderHeader = () => {
-		return (
-			<div className="flex justify-content-end">
-				<span className="p-input-icon-left">
-					<i className="pi pi-search" />
-					<InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Nhập tên địa điểm" />
-				</span>
-			</div>
-		)
-	}
-
-	const header = renderHeader()
-
 	const style = (feature) => {
 		return {
 			weight: 2,
@@ -256,27 +226,51 @@ export default function Map() {
 		}
 	}
 
+	const dataPlacesTree = () => {
+		let dataTree = []
+		if (treePlaceList) {
+			Object.entries(treePlaceList).map(([category, points]) => {
+				let arrObj = []
+				let obj = {}
+				points.map(({ id, place_name }) => {
+					var newObject = {}
+					newObject["key"] = id
+					newObject["label"] = place_name
+					newObject["data"] = place_name + " Folder"
+					arrObj.push(newObject)
+				})
+				obj["key"] = category
+				obj["label"] = category
+				obj["data"] = category + " Folder"
+				obj["children"] = arrObj
+				dataTree.push(obj)
+			})
+		}
+		return dataTree
+	}
+
+	const dataPlacesTreeList = dataPlacesTree()
+
+	const onSelectionChange = (e) => {
+		setSelectedKeys(e.value)
+		console.log(e.value)
+	}
+
 	return (
 		<>
 			<div className="flex">
 				<div className="col-3">
-					<DataTable
+					<Tree
 						style={{ height: "calc(100vh - 20px)" }}
-						className="mt-2 overflow-auto"
-						rowClassName="cursor-pointer"
-						value={list}
-						paginator
-						rows={12}
-						rowHover={true}
-						onRowClick={handleRowClick}
-						dataKey="id"
-						filters={filters}
-						globalFilterFields={["place_name"]}
-						header={header}
-						emptyMessage="Không có địa điểm phù hợp"
-					>
-						<Column field="place_name" header="Tên địa điểm"></Column>
-					</DataTable>
+						value={dataPlacesTreeList}
+						filter
+						filterMode="strict"
+						filterPlaceholder="Nhập tên địa điểm"
+						className="w-full overflow-auto"
+						onSelectionChange={onSelectionChange}
+						selectionMode="single"
+						selectionKeys={selectedKeys}
+					/>
 				</div>
 				<MapContainer className="col-9" center={center} zoom={10} style={{ height: "calc(100vh - 20px)" }} ref={mapRef}>
 					<TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

@@ -30,7 +30,7 @@ export default function Login() {
 			const result = await response.json()
 			if (result && data.password === result.password) {
 				navigate("/manager/home")
-				localStorage.setItem("isLoggedIn", "true")
+				sessionStorage.setItem("isLoggedIn", "true")
 			} else {
 				toast.current.show({ severity: "error", summary: "Error", detail: "Sai thông tin đăng nhập!" })
 				return false

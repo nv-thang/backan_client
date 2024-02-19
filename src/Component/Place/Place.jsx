@@ -25,7 +25,7 @@ export default function Place() {
 	const toast = useRef(null)
 
 	const fetchData = async () => {
-		const url = `https://backanadmin.dmit.edu.vn:4004/place/getAllPlace`
+		const url = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
 		console.log("hihi")
 
 		console.log("error", url)

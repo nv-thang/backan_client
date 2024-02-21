@@ -7,16 +7,19 @@ import "react-leaflet-fullscreen/styles.css"
 import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMap, ScaleControl, GeoJSON } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-cluster"
 
-import Location from "../../Storage/Images/marker.png"
-import Lake from "../../Storage/Images/lake.png"
-import Relic from "../../Storage/Images/relic.png"
-import Cave from "../../Storage/Images/cave.png"
-import Waterfall from "../../Storage/Images/waterfall.png"
-import Reserve from "../../Storage/Images/reserve.png"
-import Terraces from "../../Storage/Images/terraces.png"
-import Adventure from "../../Storage/Images/adventure.png"
+import Location from "../../Images/marker.png"
+import Lake from "../../Images/lake.png"
+import Relic from "../../Images/relic.png"
+import Cave from "../../Images/cave.png"
+import Waterfall from "../../Images/waterfall.png"
+import Reserve from "../../Images/reserve.png"
+import Terraces from "../../Images/terraces.png"
+import Adventure from "../../Images/adventure.png"
 
+import { classNames } from "primereact/utils"
 import { Tree } from "primereact/tree"
+import { Image } from "primereact/image"
+import { Splitter, SplitterPanel } from "primereact/splitter"
 
 const LegendControl = () => {
 	const map = useMap()
@@ -68,7 +71,8 @@ export default function Map() {
 	const [treePlaceList, setTreePlaceList] = useState({})
 	const [geoJSONData, setGeoJSONData] = useState({})
 	const [selectedKeys, setSelectedKeys] = useState()
-	const mapRef = useRef()
+	const mapRef = useRef(null)
+	const markerRefs = useRef([])
 
 	const fetchData = async () => {
 		const url = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
@@ -81,7 +85,7 @@ export default function Map() {
 			const organizedData2 = {}
 			const treeData = {}
 			results.forEach((point) => {
-				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
+				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images } = point
 
 				if (!organizedData[cluster]) {
 					organizedData[cluster] = {}
@@ -91,12 +95,12 @@ export default function Map() {
 					organizedData[cluster][category] = []
 				}
 
-				organizedData[cluster][category].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
+				organizedData[cluster][category].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images })
 			})
 			setListPlace(organizedData)
 
 			results.forEach((point) => {
-				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
+				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images } = point
 
 				if (!organizedData2[category]) {
 					organizedData2[category] = {}
@@ -106,7 +110,7 @@ export default function Map() {
 					organizedData2[category][cluster] = []
 				}
 
-				organizedData2[category][cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
+				organizedData2[category][cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images })
 			})
 			setListPlace2(organizedData2)
 
@@ -146,9 +150,12 @@ export default function Map() {
 			className: "custom-div-icon",
 		})
 
-	const createPopup = (place_name, latitude, longitude, description) => {
+	const createPopup = (place_name, latitude, longitude, description, images) => {
+		if (images) {
+			images = images.split(",")
+		}
 		return (
-			<>
+			<div className="overflow-auto overflow-x-hidden">
 				<h1>Tên: {place_name}</h1>
 				<span>
 					<strong>Kinh độ: </strong>
@@ -160,59 +167,66 @@ export default function Map() {
 					<strong>Mô tả: </strong>
 					{description}
 				</span>
-			</>
+				<br />
+				<span className="flex overflow-x-auto">
+					{images &&
+						images.map((image, index) => (
+							<Image key={index} src={`data:image/jpeg;base64,${image}`} alt="No Image" width="100" height="100" className={classNames({ "ml-1": index !== 0 })}></Image>
+						))}
+				</span>
+			</div>
 		)
 	}
 
-	const renderMarker = (id, place_name, latitude, longitude, category, description) => {
+	const renderMarker = (id, place_name, latitude, longitude, category, description, images) => {
 		switch (category) {
 			case "Hang động Karst":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Cave)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Cave)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			case "Thác nước":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Waterfall)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Waterfall)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			case "Hồ ao":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Lake)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Lake)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 
 			case "Khu du lịch sinh thái":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Adventure)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Adventure)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			case "Cảnh quan ruộng bậc thang":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Terraces)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Terraces)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			case "Khu di tích lịch sử":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Relic)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Relic)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			case "Khu bảo tồn":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Reserve)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Reserve)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 			default:
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Location)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description)}</Popup>
+					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Location)} ref={(ref) => markerRefs.current.push(ref)}>
+						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
 					</Marker>
 				)
 		}
@@ -251,17 +265,23 @@ export default function Map() {
 
 	const dataPlacesTreeList = dataPlacesTree()
 
-	const onSelectionChange = (e) => {
+	const onSelectionChange = async (e) => {
 		setSelectedKeys(e.value)
-		console.log(e.value)
+		if (!Number.isNaN(parseInt(e.value))) {
+			const url = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${e.value}`
+			const response = await fetch(url)
+			const result = await response.json()
+			console.log(result)
+			mapRef.current.flyTo([result.latitude, result.longitude], 17)
+		}
 	}
 
 	return (
 		<>
-			<div className="flex">
-				<div className="col-3">
+			<Splitter style={{ height: "90vh" }}>
+				<SplitterPanel size={25} minSize={20} className="flex align-items-center justify-content-center">
 					<Tree
-						style={{ height: "calc(100vh - 20px)" }}
+						style={{ height: "90vh" }}
 						value={dataPlacesTreeList}
 						filter
 						filterMode="strict"
@@ -271,51 +291,57 @@ export default function Map() {
 						selectionMode="single"
 						selectionKeys={selectedKeys}
 					/>
-				</div>
-				<MapContainer className="col-9" center={center} zoom={10} style={{ height: "calc(100vh - 20px)" }} ref={mapRef}>
-					<TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-					<LayersControl position="topright">
-						<BaseLayer checked name="OpenStreetMap">
-							<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OpenStreetMap contributors" />
-						</BaseLayer>
+				</SplitterPanel>
+				<SplitterPanel size={75} minSize={75} className="flex align-items-center justify-content-center">
+					<MapContainer className="col-12" center={center} zoom={10} style={{ height: "90vh" }} ref={mapRef}>
+						<TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+						<LayersControl position="topright">
+							<BaseLayer checked name="OpenStreetMap">
+								<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="© OpenStreetMap contributors" />
+							</BaseLayer>
 
-						<BaseLayer name="CartoDB">
-							<TileLayer url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png" attribution="© OpenStreetMap contributors, CartoDB" />
-						</BaseLayer>
+							<BaseLayer name="CartoDB">
+								<TileLayer url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png" attribution="© OpenStreetMap contributors, CartoDB" />
+							</BaseLayer>
 
-						{Object.entries(places).map(([cluster, categories]) => (
-							<Overlay key={cluster} name={cluster}>
-								<MarkerClusterGroup>
-									{Object.entries(categories).map(([category, points]) => (
-										<LayerGroup key={category}>
-											{points.map(({ id, place_name, longitude, latitude, description }) => renderMarker(id, place_name, latitude, longitude, category, description))}
-										</LayerGroup>
-									))}
-								</MarkerClusterGroup>
-							</Overlay>
+							{Object.entries(places).map(([cluster, categories]) => (
+								<Overlay key={cluster} name={cluster}>
+									<MarkerClusterGroup>
+										{Object.entries(categories).map(([category, points]) => (
+											<LayerGroup key={category}>
+												{points.map(({ id, place_name, longitude, latitude, description, images }) =>
+													renderMarker(id, place_name, latitude, longitude, category, description, images)
+												)}
+											</LayerGroup>
+										))}
+									</MarkerClusterGroup>
+								</Overlay>
+							))}
+							{Object.entries(places2).map(([category, clusters]) => (
+								<Overlay key={category} name={category} checked>
+									<MarkerClusterGroup>
+										{Object.entries(clusters).map(([cluster, points]) => (
+											<LayerGroup key={cluster}>
+												{points.map(({ id, place_name, longitude, latitude, description, images }) =>
+													renderMarker(id, place_name, latitude, longitude, category, description, images)
+												)}
+											</LayerGroup>
+										))}
+									</MarkerClusterGroup>
+								</Overlay>
+							))}
+						</LayersControl>
+						<FullscreenControl forceSeparateButton={true} />
+						<LegendControl />
+						<ScaleControl position="bottomright" />
+						{Object.entries(geoJSONData).map(([id, polygon]) => (
+							<GeoJSON key={polygon.gid} data={JSON.parse(polygon.geometry)} style={style}>
+								<Popup>{polygon.name_2}</Popup>
+							</GeoJSON>
 						))}
-						{Object.entries(places2).map(([category, clusters]) => (
-							<Overlay key={category} name={category} checked>
-								<MarkerClusterGroup>
-									{Object.entries(clusters).map(([cluster, points]) => (
-										<LayerGroup key={cluster}>
-											{points.map(({ id, place_name, longitude, latitude, description }) => renderMarker(id, place_name, latitude, longitude, category, description))}
-										</LayerGroup>
-									))}
-								</MarkerClusterGroup>
-							</Overlay>
-						))}
-					</LayersControl>
-					<FullscreenControl forceSeparateButton={true} />
-					<LegendControl />
-					<ScaleControl position="bottomright" />
-					{Object.entries(geoJSONData).map(([id, polygon]) => (
-						<GeoJSON key={polygon.gid} data={JSON.parse(polygon.geometry)} style={style}>
-							<Popup>{polygon.name_2}</Popup>
-						</GeoJSON>
-					))}
-				</MapContainer>
-			</div>
+					</MapContainer>
+				</SplitterPanel>
+			</Splitter>
 		</>
 	)
 }

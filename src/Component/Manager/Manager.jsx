@@ -21,7 +21,7 @@ import Cluster from "../Cluster"
 import User from "../User"
 import Map from "../Map"
 import Login from "../Login"
-// import Logo from "../../Storage/Images/Home.jpg"
+// import Logo from "../../Images/Home.jpg"
 
 export default function Manager() {
 	const navigate = useNavigate()
@@ -40,15 +40,12 @@ export default function Manager() {
 
 	const end = (
 		<>
-			<Button severity="info" text onClick={(e) => console.log(e)}>
-				<i className="pi pi-facebook" />
-			</Button>
-			<Button severity="info" text onClick={(e) => console.log(e)}>
-				<i className="pi pi-google" />
-			</Button>
-			<Button severity="danger" text onClick={handleLogout}>
-				<i className="pi pi-power-off" />
-			</Button>
+			<div className="flex">
+				<h2>Bản đồ du lịch tự nhiên tỉnh Bắc Kạn</h2>
+				<Button severity="danger" text onClick={handleLogout}>
+					<i className="pi pi-power-off" />
+				</Button>
+			</div>
 		</>
 	)
 

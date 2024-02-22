@@ -271,7 +271,6 @@ export default function Viewpage() {
 			const url = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${e.value}`
 			const response = await fetch(url)
 			const result = await response.json()
-			console.log(result)
 			mapRef.current.flyTo([result.latitude, result.longitude], 17)
 		}
 	}

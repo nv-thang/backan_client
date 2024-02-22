@@ -26,7 +26,6 @@ export default function Category() {
 
 	const fetchData = async () => {
 		const url = `${process.env.REACT_APP_API_URL}/category/getAllCategory`
-		console.log("error", url)
 		try {
 			const response = await fetch(url)
 			const results = await response.json()
@@ -70,7 +69,6 @@ export default function Category() {
 
 		const response = await fetch(url)
 		const results = await response.json()
-		console.log(results)
 		setTitle(results.title || "")
 		setSelected(results.is_select || "")
 		setImage(results.image || "")

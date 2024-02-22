@@ -70,7 +70,6 @@ export default function APIs() {
 				body: JSON.stringify(user),
 			})
 			const result = await response.json()
-			console.log(response)
 			if (result) {
 				handleHideForm()
 				toast.current.show({ severity: "success", summary: "Info", detail: "User is created" })

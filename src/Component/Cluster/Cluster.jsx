@@ -57,7 +57,6 @@ export default function Cluster() {
 
 		const response = await fetch(url)
 		const results = await response.json()
-		console.log(results)
 		setTitle(results.title || "")
 		setImage(results.image || "")
 		setVisible(true)

@@ -135,7 +135,6 @@ export default function Place() {
 	}
 
 	const handleEditClick = async (rowData) => {
-		console.log(rowData.id)
 		setId(rowData.id)
 		setVisible(true)
 	}
@@ -157,7 +156,6 @@ export default function Place() {
 	}
 
 	const handleSavePlace = async () => {
-		console.log(fileUploadRef.current.getFiles())
 		let listFiles = ""
 		const files = fileUploadRef.current.getFiles()
 		if (files.length > 0) {
@@ -171,7 +169,6 @@ export default function Place() {
 			})
 			await Promise.all(readerPromises)
 				.then((imageDataArray) => {
-					console.log(imageDataArray.join(","))
 					listFiles = imageDataArray.join(",")
 				})
 				.catch((error) => console.error("Error reading images:", error))
@@ -236,7 +233,6 @@ export default function Place() {
 	}
 
 	const handleClusterChange = (e) => {
-		console.log(e.value)
 		setIdCluster(e.value)
 	}
 

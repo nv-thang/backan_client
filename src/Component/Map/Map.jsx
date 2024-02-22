@@ -243,10 +243,10 @@ export default function Map() {
 	const dataPlacesTree = () => {
 		let dataTree = []
 		if (treePlaceList) {
-			Object.entries(treePlaceList).map(([category, points]) => {
+			Object.entries(treePlaceList).forEach(([category, points]) => {
 				let arrObj = []
 				let obj = {}
-				points.map(({ id, place_name }) => {
+				points.forEach(({ id, place_name }) => {
 					var newObject = {}
 					newObject["key"] = id
 					newObject["label"] = place_name

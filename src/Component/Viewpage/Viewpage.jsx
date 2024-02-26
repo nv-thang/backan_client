@@ -18,7 +18,7 @@ import Adventure from "../../Images/adventure.png"
 
 import { classNames } from "primereact/utils"
 import { Tree } from "primereact/tree"
-import { Image } from "primereact/image"
+// import { Image } from "primereact/image"
 import { Splitter, SplitterPanel } from "primereact/splitter"
 
 const LegendControl = () => {
@@ -65,27 +65,26 @@ const LegendControl = () => {
 	return null
 }
 
-export default function Viewpage() {
+export default function Map() {
 	const [places, setListPlace] = useState({})
 	const [places2, setListPlace2] = useState({})
 	const [treePlaceList, setTreePlaceList] = useState({})
 	const [geoJSONData, setGeoJSONData] = useState({})
 	const [selectedKeys, setSelectedKeys] = useState()
 	const mapRef = useRef(null)
-	const markerRefs = useRef([])
 
 	const fetchData = async () => {
-		const url = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
+		const urlGetAllPlaces = `${process.env.REACT_APP_API_URL}/place/getAllPlace`
 		const urlRanhGioiHuyen = `${process.env.REACT_APP_API_URL}/place/getRanhGioiHuyen`
 
 		try {
-			const response = await fetch(url)
+			const response = await fetch(urlGetAllPlaces)
 			const results = await response.json()
 			const organizedData = {}
 			const organizedData2 = {}
 			const treeData = {}
 			results.forEach((point) => {
-				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images } = point
+				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
 
 				if (!organizedData[cluster]) {
 					organizedData[cluster] = {}
@@ -95,12 +94,12 @@ export default function Viewpage() {
 					organizedData[cluster][category] = []
 				}
 
-				organizedData[cluster][category].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images })
+				organizedData[cluster][category].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
 			})
 			setListPlace(organizedData)
 
 			results.forEach((point) => {
-				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images } = point
+				const { id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description } = point
 
 				if (!organizedData2[category]) {
 					organizedData2[category] = {}
@@ -110,7 +109,7 @@ export default function Viewpage() {
 					organizedData2[category][cluster] = []
 				}
 
-				organizedData2[category][cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description, images })
+				organizedData2[category][cluster].push({ id, place_name, address, time, season, id_category, id_cluster, longitude, latitude, cluster, category, description })
 			})
 			setListPlace2(organizedData2)
 
@@ -144,13 +143,13 @@ export default function Viewpage() {
 	const center = [22.275680307028182, 105.87320519077504] // 22.275680307028182, 105.87320519077504
 	const { BaseLayer, Overlay } = LayersControl
 
-	const createCustomIcon = (icon) =>
+	const handleCreateCustomIcon = (icon) =>
 		new L.divIcon({
 			html: `<img src="${icon}" alt="" width="30" height="30" style="border: 1px solid cyan">`,
 			className: "custom-div-icon",
 		})
 
-	const createPopup = (place_name, latitude, longitude, description, images) => {
+	/* const createPopup = (place_name, latitude, longitude, description, images) => {
 		if (images) {
 			images = images.split(",")
 		}
@@ -176,58 +175,134 @@ export default function Viewpage() {
 				</span>
 			</div>
 		)
+	} */
+
+	const handleMarkerClick = async (e, id) => {
+		e.target.unbindPopup()
+		const urlGetPlaceForMarkerById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${id}`
+		const response = await fetch(urlGetPlaceForMarkerById)
+		const result = await response.json()
+		let images = result.images
+		if (images) {
+			images = images.split(",")
+		}
+		const popup = `<div class="overflow-auto overflow-x-hidden">
+				<h1>Tên: ${result.place_name}</h1>
+				<span>
+					<strong>Kinh độ: </strong>
+					${result.latitude} - <strong>Vĩ độ: </strong>
+					${result.longitude}
+				</span>
+				<br />
+				<span>
+					<strong>Mô tả: </strong>
+					${result.description}
+				</span>
+				<br />
+				<span class="flex overflow-x-auto">
+					${
+						images &&
+						images.length > 0 &&
+						images.map(
+							(image, index) =>
+								`<Image key="${index}" src="data:image/jpeg;base64,${image}" alt="No Image" width="100" height="100" class="${classNames({ "ml-1": index !== 0 })}"></Image>`
+						)
+					}
+				</span>
+			</div>`
+		e.target.bindPopup(popup).openPopup()
 	}
 
-	const renderMarker = (id, place_name, latitude, longitude, category, description, images) => {
+	const handleRenderMarker = (id, latitude, longitude, category) => {
 		switch (category) {
 			case "Hang động Karst":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Cave)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Cave)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			case "Thác nước":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Waterfall)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Waterfall)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			case "Hồ ao":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Lake)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Lake)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 
 			case "Khu du lịch sinh thái":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Adventure)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Adventure)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			case "Cảnh quan ruộng bậc thang":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Terraces)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Terraces)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			case "Khu di tích lịch sử":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Relic)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Relic)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			case "Khu bảo tồn":
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Reserve)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Reserve)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 			default:
 				return (
-					<Marker key={id} position={[latitude, longitude]} icon={createCustomIcon(Location)} ref={(ref) => markerRefs.current.push(ref)}>
-						<Popup>{createPopup(place_name, latitude, longitude, description, images)}</Popup>
-					</Marker>
+					<Marker
+						key={id}
+						position={[latitude, longitude]}
+						icon={handleCreateCustomIcon(Location)}
+						eventHandlers={{
+							click: (e) => handleMarkerClick(e, id),
+						}}
+					></Marker>
 				)
 		}
 	}
@@ -268,19 +343,44 @@ export default function Viewpage() {
 	const onSelectionChange = async (e) => {
 		setSelectedKeys(e.value)
 		if (!Number.isNaN(parseInt(e.value))) {
-			const url = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${e.value}`
-			const response = await fetch(url)
+			const urlGetPlaceForTreeById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${e.value}`
+			const response = await fetch(urlGetPlaceForTreeById)
 			const result = await response.json()
+			let images = result.images
+			if (images) {
+				images = images.split(",")
+			}
+			const popup = `<div class="overflow-auto overflow-x-hidden">
+				<h1>Tên: ${result.place_name}</h1>
+				<span>
+					<strong>Kinh độ: </strong>
+					${result.latitude} - <strong>Vĩ độ: </strong>
+					${result.longitude}
+				</span>
+				<br />
+				<span>
+					<strong>Mô tả: </strong>
+					${result.description}
+				</span>
+				<br />
+				<span class="flex overflow-x-auto">
+					${
+						images &&
+						images.length > 0 &&
+						images.map(
+							(image, index) =>
+								`<Image key="${index}" src="data:image/jpeg;base64,${image}" alt="No Image" width="100" height="100" class="${classNames({ "ml-1": index !== 0 })}"></Image>`
+						)
+					}
+				</span>
+			</div>`
 			mapRef.current.flyTo([result.latitude, result.longitude], 17)
+			mapRef.current.openPopup(popup, [result.latitude, result.longitude])
 		}
 	}
 
 	return (
 		<>
-			<div>
-				<h2 className="text-blue-500">Bản đồ du lịch tự nhiên tỉnh Bắc Kạn</h2>
-			</div>
-
 			<Splitter style={{ height: "90vh" }}>
 				<SplitterPanel size={25} minSize={20} className="flex align-items-center justify-content-center">
 					<Tree
@@ -311,11 +411,7 @@ export default function Viewpage() {
 								<Overlay key={cluster} name={cluster}>
 									<MarkerClusterGroup>
 										{Object.entries(categories).map(([category, points]) => (
-											<LayerGroup key={category}>
-												{points.map(({ id, place_name, longitude, latitude, description, images }) =>
-													renderMarker(id, place_name, latitude, longitude, category, description, images)
-												)}
-											</LayerGroup>
+											<LayerGroup key={category}>{points.map(({ id, longitude, latitude }) => handleRenderMarker(id, latitude, longitude, category))}</LayerGroup>
 										))}
 									</MarkerClusterGroup>
 								</Overlay>
@@ -324,11 +420,7 @@ export default function Viewpage() {
 								<Overlay key={category} name={category} checked>
 									<MarkerClusterGroup>
 										{Object.entries(clusters).map(([cluster, points]) => (
-											<LayerGroup key={cluster}>
-												{points.map(({ id, place_name, longitude, latitude, description, images }) =>
-													renderMarker(id, place_name, latitude, longitude, category, description, images)
-												)}
-											</LayerGroup>
+											<LayerGroup key={cluster}>{points.map(({ id, longitude, latitude }) => handleRenderMarker(id, latitude, longitude, category))}</LayerGroup>
 										))}
 									</MarkerClusterGroup>
 								</Overlay>

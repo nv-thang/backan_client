@@ -381,6 +381,9 @@ export default function Map() {
 
 	return (
 		<>
+			<div>
+				<h2 className="text-blue-500">Bản đồ du lịch tự nhiên tỉnh Bắc Kạn</h2>
+			</div>
 			<Splitter style={{ height: "90vh" }}>
 				<SplitterPanel size={25} minSize={20} className="flex align-items-center justify-content-center">
 					<Tree

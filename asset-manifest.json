@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/backan_client/static/css/main.3ea9f052.css",
-    "main.js": "/backan_client/static/js/main.2b6e015a.js",
+    "main.js": "/backan_client/static/js/main.61df0223.js",
     "static/js/787.d5fa4d18.chunk.js": "/backan_client/static/js/787.d5fa4d18.chunk.js",
     "static/media/primeicons.svg": "/backan_client/static/media/primeicons.e1441b135b3ca9ad643c.svg",
     "static/media/Inter-italic.var.woff2?v=3.19": "/backan_client/static/media/Inter-italic.var.30807be7abc48ba8c73c.woff2",
@@ -19,11 +19,11 @@
     "static/media/marker.png": "/backan_client/static/media/marker.ba4ccf9b6fa6356f4eb8.png",
     "index.html": "/backan_client/index.html",
     "main.3ea9f052.css.map": "/backan_client/static/css/main.3ea9f052.css.map",
-    "main.2b6e015a.js.map": "/backan_client/static/js/main.2b6e015a.js.map",
+    "main.61df0223.js.map": "/backan_client/static/js/main.61df0223.js.map",
     "787.d5fa4d18.chunk.js.map": "/backan_client/static/js/787.d5fa4d18.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3ea9f052.css",
-    "static/js/main.2b6e015a.js"
+    "static/js/main.61df0223.js"
   ]
 }

@@ -143,168 +143,92 @@ export default function Map() {
 	const center = [22.275680307028182, 105.87320519077504] // 22.275680307028182, 105.87320519077504
 	const { BaseLayer, Overlay } = LayersControl
 
-	const handleCreateCustomIcon = (icon) =>
-		new L.divIcon({
-			html: `<img src="${icon}" alt="" width="30" height="30" style="border: 1px solid cyan">`,
-			className: "custom-div-icon",
-		})
+	const handleRenderMarker = (id, latitude, longitude, category) => {
+		switch (category) {
+			case "Hang động Karst":
+				return handleCreateMarker(id, latitude, longitude, Cave)
+			case "Thác nước":
+				return handleCreateMarker(id, latitude, longitude, Waterfall)
+			case "Hồ ao":
+				return handleCreateMarker(id, latitude, longitude, Lake)
+			case "Khu du lịch sinh thái":
+				return handleCreateMarker(id, latitude, longitude, Adventure)
+			case "Cảnh quan ruộng bậc thang":
+				return handleCreateMarker(id, latitude, longitude, Terraces)
+			case "Khu di tích lịch sử":
+				return handleCreateMarker(id, latitude, longitude, Relic)
+			case "Khu bảo tồn":
+				return handleCreateMarker(id, latitude, longitude, Reserve)
+			default:
+				return handleCreateMarker(id, latitude, longitude, Location)
+		}
+	}
 
-	/* const createPopup = (place_name, latitude, longitude, description, images) => {
+	const handleCreateMarker = (id, latitude, longitude, icon) => {
+		return (
+			<Marker
+				key={id}
+				position={[latitude, longitude]}
+				icon={
+					new L.divIcon({
+						html: `<img src="${icon}" alt="" width="30" height="30" style="border: 1px solid cyan">`,
+						className: "custom-div-icon",
+					})
+				}
+				eventHandlers={{
+					click: (e) => handleMarkerClick(e, id),
+				}}
+			></Marker>
+		)
+	}
+
+	const handleCreatePopup = (place_name, latitude, longitude, description, images) => {
+		let popup = ``
 		if (images) {
 			images = images.split(",")
-		}
-		return (
-			<div className="overflow-auto overflow-x-hidden">
-				<h1>Tên: {place_name}</h1>
+			popup = `<div class="overflow-auto overflow-x-hidden">
+				<h1>Tên: ${place_name}</h1>
 				<span>
 					<strong>Kinh độ: </strong>
-					{latitude} - <strong>Vĩ độ: </strong>
-					{longitude}
+					${latitude} - <strong>Vĩ độ: </strong>
+					${longitude}
 				</span>
 				<br />
 				<span>
 					<strong>Mô tả: </strong>
-					{description}
+					${description}
 				</span>
 				<br />
-				<span className="flex overflow-x-auto">
-					{images &&
-						images.map((image, index) => (
-							<Image key={index} src={`data:image/jpeg;base64,${image}`} alt="No Image" width="100" height="100" className={classNames({ "ml-1": index !== 0 })}></Image>
-						))}
+				<span class="flex overflow-x-auto">
+					${images.map((image, index) => `<Image key="${index}" src="data:image/jpeg;base64,${image}" alt="No Image" width="100" height="100" class="${classNames({ "ml-1": index !== 0 })}"></Image>`)}
 				</span>
-			</div>
-		)
-	} */
+			</div>`
+		} else {
+			popup = `<div class="overflow-auto overflow-x-hidden">
+				<h1>Tên: ${place_name}</h1>
+				<span>
+					<strong>Kinh độ: </strong>
+					${latitude} - <strong>Vĩ độ: </strong>
+					${longitude}
+				</span>
+				<br />
+				<span>
+					<strong>Mô tả: </strong>
+					${description}
+				</span>
+			</div>`
+		}
+
+		return popup
+	}
 
 	const handleMarkerClick = async (e, id) => {
 		e.target.unbindPopup()
 		const urlGetPlaceForMarkerById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${id}`
 		const response = await fetch(urlGetPlaceForMarkerById)
 		const result = await response.json()
-		let images = result.images
-		if (images) {
-			images = images.split(",")
-		}
-		const popup = `<div class="overflow-auto overflow-x-hidden">
-				<h1>Tên: ${result.place_name}</h1>
-				<span>
-					<strong>Kinh độ: </strong>
-					${result.latitude} - <strong>Vĩ độ: </strong>
-					${result.longitude}
-				</span>
-				<br />
-				<span>
-					<strong>Mô tả: </strong>
-					${result.description}
-				</span>
-				<br />
-				<span class="flex overflow-x-auto">
-					${
-						images &&
-						images.length > 0 &&
-						images.map(
-							(image, index) =>
-								`<Image key="${index}" src="data:image/jpeg;base64,${image}" alt="No Image" width="100" height="100" class="${classNames({ "ml-1": index !== 0 })}"></Image>`
-						)
-					}
-				</span>
-			</div>`
+		const popup = handleCreatePopup(result.place_name, result.latitude, result.longitude, result.description, result.images)
 		e.target.bindPopup(popup).openPopup()
-	}
-
-	const handleRenderMarker = (id, latitude, longitude, category) => {
-		switch (category) {
-			case "Hang động Karst":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Cave)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			case "Thác nước":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Waterfall)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			case "Hồ ao":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Lake)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-
-			case "Khu du lịch sinh thái":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Adventure)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			case "Cảnh quan ruộng bậc thang":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Terraces)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			case "Khu di tích lịch sử":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Relic)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			case "Khu bảo tồn":
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Reserve)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-			default:
-				return (
-					<Marker
-						key={id}
-						position={[latitude, longitude]}
-						icon={handleCreateCustomIcon(Location)}
-						eventHandlers={{
-							click: (e) => handleMarkerClick(e, id),
-						}}
-					></Marker>
-				)
-		}
 	}
 
 	const style = (feature) => {
@@ -346,34 +270,7 @@ export default function Map() {
 			const urlGetPlaceForTreeById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${e.value}`
 			const response = await fetch(urlGetPlaceForTreeById)
 			const result = await response.json()
-			let images = result.images
-			if (images) {
-				images = images.split(",")
-			}
-			const popup = `<div class="overflow-auto overflow-x-hidden">
-				<h1>Tên: ${result.place_name}</h1>
-				<span>
-					<strong>Kinh độ: </strong>
-					${result.latitude} - <strong>Vĩ độ: </strong>
-					${result.longitude}
-				</span>
-				<br />
-				<span>
-					<strong>Mô tả: </strong>
-					${result.description}
-				</span>
-				<br />
-				<span class="flex overflow-x-auto">
-					${
-						images &&
-						images.length > 0 &&
-						images.map(
-							(image, index) =>
-								`<Image key="${index}" src="data:image/jpeg;base64,${image}" alt="No Image" width="100" height="100" class="${classNames({ "ml-1": index !== 0 })}"></Image>`
-						)
-					}
-				</span>
-			</div>`
+			const popup = handleCreatePopup(result.place_name, result.latitude, result.longitude, result.description, result.images)
 			mapRef.current.flyTo([result.latitude, result.longitude], 17)
 			mapRef.current.openPopup(popup, [result.latitude, result.longitude])
 		}

@@ -1,0 +1,77 @@
+.custom-icon {
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #2E86C1; /* Màu viền */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-icon img {
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+}
+
+
+.map-container {
+  position: relative;
+}
+
+.map-panel {
+  position: absolute;
+  top: 10px;
+  left: 10;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 300px;
+}
+
+.right-panel {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  z-index: 1000;
+  width: 300px;
+}
+
+.map-panel .react-tabs__tab-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.map-panel .react-tabs__tab {
+  margin: 0;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.map-panel .react-tabs__tab--selected {
+  border-bottom: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.map-panel .react-tabs__tab-panel {
+  padding: 10px;
+}
+
+.update-data-button {
+  position: absolute;
+  top: 10px;
+  right: 320px;
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}

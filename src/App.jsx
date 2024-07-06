@@ -10,7 +10,9 @@ import { Routes, Route } from "react-router-dom"
 import GlobalStyles from "./Component/GlobalStyle"
 import React from "react"
 import Manager from "./Component/Manager"
-import Viewpage from "./Component/Viewpage"
+import Home from "./V2/pages/Home"
+import About from "./V2/pages/About"
+import Contact from "./V2/pages/Contact"
 
 function App() {
 	return (
@@ -18,7 +20,9 @@ function App() {
 			<GlobalStyles>
 				<div className="h-screen">
 					<Routes>
-						<Route path="/" element={<Viewpage />} />
+						<Route path="/" element={<Home />} />
+						<Route path="/about" element={<About />} />
+						<Route path="/contact" element={<Contact />} />
 						<Route path="/manager/*" exact element={<Manager />} />
 					</Routes>
 				</div>

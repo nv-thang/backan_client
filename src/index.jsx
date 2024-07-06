@@ -9,6 +9,8 @@ import { PrimeReactProvider } from "primereact/api"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 /* <React.StrictMode></React.StrictMode> */
 
 const root = ReactDOM.createRoot(document.getElementById("root"))

@@ -1,0 +1,15 @@
+.map-panel {
+    max-height: 600px; /* Chiều cao tối đa của toàn bộ panel */
+    overflow-y: auto; /* Thêm cuộn dọc nếu cần */
+  }
+  
+  .tab-content {
+    max-height: 500px; /* Chiều cao tối đa của nội dung tab */
+    overflow-y: auto; /* Thêm cuộn dọc nếu cần */
+  }
+  
+  .accordion-body {
+    max-height: 300px; /* Chiều cao tối đa của mỗi mục Accordion */
+    overflow-y: auto; /* Thêm cuộn dọc nếu cần */
+  }
+  

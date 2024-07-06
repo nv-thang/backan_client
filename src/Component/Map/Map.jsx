@@ -18,7 +18,6 @@ import Adventure from "../../Images/adventure.png"
 
 import { classNames } from "primereact/utils"
 import { Tree } from "primereact/tree"
-// import { Image } from "primereact/image"
 import { Splitter, SplitterPanel } from "primereact/splitter"
 
 const LegendControl = () => {
@@ -140,7 +139,7 @@ export default function Map() {
 		fetchData()
 	}, [])
 
-	const center = [22.275680307028182, 105.87320519077504] // 22.275680307028182, 105.87320519077504
+	const center = [22.275680307028182, 105.87320519077504]
 	const { BaseLayer, Overlay } = LayersControl
 
 	const handleRenderMarker = (id, latitude, longitude, category) => {
@@ -227,6 +226,7 @@ export default function Map() {
 		const urlGetPlaceForMarkerById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${id}`
 		const response = await fetch(urlGetPlaceForMarkerById)
 		const result = await response.json()
+		console.log(result.images);
 		const popup = handleCreatePopup(result.place_name, result.latitude, result.longitude, result.description, result.images)
 		e.target.bindPopup(popup).openPopup()
 	}

@@ -227,6 +227,8 @@ export default function Map() {
 		const urlGetPlaceForMarkerById = `${process.env.REACT_APP_API_URL}/place/getPlaceById?id=${id}`
 		const response = await fetch(urlGetPlaceForMarkerById)
 		const result = await response.json()
+		console.log( typeof result.images);
+
 		const popup = handleCreatePopup(result.place_name, result.latitude, result.longitude, result.description, result.images)
 		e.target.bindPopup(popup).openPopup()
 	}

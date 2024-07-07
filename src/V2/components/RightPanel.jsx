@@ -50,7 +50,7 @@ const handleShowModal = () => {
           </Card.Text>
           {
             data.action ?
-              <Button variant="primary" size="sm" onClick={handleShowModal} disabled={loading}>
+              <Button variant="warning" size="sm" onClick={handleShowModal} disabled={loading}>
                 {loading ? 'Đang tải...' : 'Xem thêm'}
               </Button>
               : <></>

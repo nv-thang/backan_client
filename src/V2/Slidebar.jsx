@@ -9,11 +9,11 @@ const Sidebar = ({ isActive, toggleSidebar, activeItem, onItemClick }) => {
   ];
 
   return (
-    <div className={`sidebar ${isActive ? 'active' : ''}`}>
+    <div className={`sidebar ${isActive ? 'active' : ''} bg-light`}>
       <div className="logo_content">
         <div className="logo">
-          <i className='bx bxl-c-plus-plus'></i>
-          <div className="logo_name">Logo</div>
+          <i className='bx bxs-landscape' ></i>
+          <div className="logo_name">DLTN Bắc Kạn</div>
         </div>
         <i 
           className={`bx ${isActive ? 'bx-menu-alt-right' : 'bx-menu'}`} 
@@ -35,9 +35,9 @@ const Sidebar = ({ isActive, toggleSidebar, activeItem, onItemClick }) => {
       <div className="profile_content">
         <div className="profile">
           <div className="profile_details">
-            <img src="https://fadzrinmadu.github.io/hosted-assets/responsive-side-navigation-bar-in-html-css-and-javascript/profile.jpg" alt="" />
+            <img src="" alt="user" />
             <div className="name_job">
-              <div className="name">Prem Shahi</div>
+              <div className="name">Thangnv</div>
               <div className="job">Web Designer</div>
             </div>
           </div>

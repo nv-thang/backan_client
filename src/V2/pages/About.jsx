@@ -23,7 +23,7 @@ const About = () => {
       />
       <div className="home_content bg-white">
         <div className="text">BẢN ĐỒ DU LỊCH TỰ NHIÊN TỈNH BẮC KẠN</div>
-        <div bg="light" className='p-2'>
+        <div bg="light" className='p-2  bg-light border-top' 	style={{ height: "100%" }}>
           <h4>Giới thiệu</h4>
         </div>
       </div>

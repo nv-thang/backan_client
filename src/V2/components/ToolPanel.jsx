@@ -5,15 +5,15 @@ import './ToolPanel.css';
 const ToolPanel = ({ onZoomIn, onZoomOut, onDraw, onReset }) => {
   return (
     <div className="tool-panel">
-      <Button variant="outline-primary" onClick={onReset}>
+      <Button variant="outline-warning" onClick={onReset}>
         <i className='bx bxs-map-pin'></i>      </Button>
-      <Button variant="outline-primary" onClick={onZoomIn}>
+      <Button variant="outline-warning" onClick={onZoomIn}>
         <i className="bx bx-zoom-in"></i>
       </Button>
-      <Button variant="outline-primary" onClick={onZoomOut}>
+      <Button variant="outline-warning" onClick={onZoomOut}>
         <i className="bx bx-zoom-out"></i>
       </Button>
-      <Button variant="outline-primary" onClick={onDraw}>
+      <Button variant="outline-warning" onClick={onDraw}>
         <i className="bx bxs-layer"></i>
       </Button>
       {/* Add more tools as needed */}

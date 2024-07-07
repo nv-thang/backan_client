@@ -22,7 +22,7 @@ const App = () => {
         activeItem={activeItem} 
         onItemClick={handleItemClick} 
       />
-      <div className="home_content">
+      <div className="home_content bg-white" >
         <div className="text">BẢN ĐỒ DU LỊCH TỰ NHIÊN TỈNH BẮC KẠN</div>
         <MapWithPanel/>
       </div>

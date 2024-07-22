@@ -14,6 +14,7 @@ import Relic from "../../Images/relic.png";
 import Reserve from "../../Images/reserve.png";
 import Terraces from "../../Images/terraces.png";
 import Waterfall from "../../Images/waterfall.png";
+import DaMyNghe from "../../Images/damynghe.png";
 
 // import './LeftPanel.css';
 
@@ -88,6 +89,7 @@ const LeftPanel =({ data, onPlaceClick }) => {
                   <h6><img src={Terraces} alt="Ruộng bậc thang" width="20" /> Cảnh quan ruộng bậc thang</h6>
                   <h6><img src={Relic} alt="Di tích lịch sử" width="20" height="20" /> Khu di tích lịch sử</h6>
                   <h6><img src={Reserve} alt="Khu bảo tồn" width="20" height="20" /> Khu bảo tồn</h6>
+                  <h6><img src={DaMyNghe} alt="Đá mỹ nghệ" width="20" height="20" /> Đá mỹ nghệ</h6>
                 </div>
               </PerfectScrollbar>
             </TabPanel>

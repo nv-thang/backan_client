@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import "primeflex/primeflex.css"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { Button } from "primereact/button"
+import Button from "react-bootstrap/Button";
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
 import { Toast } from "primereact/toast"
@@ -144,10 +144,15 @@ export default function APIs() {
 	const actionsBodyTemplate = (rowData) => {
 		return (
 			<>
-				<Button severity="info" text onClick={() => handleEditClick(rowData)}>
+				<Button   
+					variant="secondary"
+					onClick={() => handleEditClick(rowData)}>
 					<i className="pi pi-pencil" />
 				</Button>
-				<Button severity="danger" text onClick={() => handleDeleteUser(rowData)}>
+				<Button  
+					className="text-white m-2"
+					variant="warning"
+					onClick={() => handleDeleteUser(rowData)}>
 					<i className="pi pi-trash" />
 				</Button>
 			</>
@@ -155,9 +160,17 @@ export default function APIs() {
 	}
 
 	return (
-		<>
+		<div className="container-fluid">
 			<Toast ref={toast} />
-			<Button className="mt-2" label="Thêm mới" onClick={() => handleAddUser()}></Button>
+			<div className="d-flex justify-content-end">
+				<Button
+				className="mt-2 "
+				label="Thêm mới"
+				onClick={() => handleAddUser()}
+				>
+				Thêm mới
+				</Button>
+			</div>
 			<DataTable className="mt-2" value={products} tableStyle={{ minWidth: "50rem" }} paginator rows={10} rowsPerPageOptions={[5, 10, 25, 50]}>
 				<Column field="fullname" header="Tên đầy đủ"></Column>
 				<Column field="username" header="Tên người dùng"></Column>
@@ -201,10 +214,10 @@ export default function APIs() {
 				</div>
 
 				<div className="mt-5 flex justify-content-evenly flex-wrap">
-					<Button label="Lưu lại" severity="success" onClick={handleSaveUser}></Button>
-					<Button className="ml-1" label="Hủy" severity="danger" onClick={() => handleHideForm()}></Button>
+					<Button onClick={handleSaveUser}>Lưu lại</Button>
+					<Button variant="warning" onClick={() => handleHideForm()}>Hủy</Button>
 				</div>
 			</Dialog>
-		</>
+		</div>
 	)
 }

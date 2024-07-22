@@ -3,14 +3,19 @@ import "primeflex/primeflex.css" // css utility
 import "primeicons/primeicons.css"
 import "primereact/resources/primereact.css"
 
-// React router dom
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
+// React router dom
 import React from "react"
 import { Routes, Route, useNavigate /* NavLink */ } from "react-router-dom"
 
 // Prime react
 import { Menubar } from "primereact/menubar"
 import { Button } from "primereact/button"
+import { Avatar } from 'primereact/avatar';  
+
 // import { Image } from "primereact/image"
 
 // Component
@@ -38,35 +43,32 @@ export default function Manager() {
 		</NavLink>
 	) */
 
+	// const end = (
+	// 	<>
+	// 		<div className="flex">
+	// 			<Button severity="danger" text onClick={handleLogout}>
+	// 				<i className="pi pi-power-off" />
+	// 			</Button>
+	// 		</div>
+	// 	</>
+	// )
 	const end = (
-		<>
-			<div className="flex">
-				<h2>Bản đồ du lịch tự nhiên tỉnh Bắc Kạn</h2>
-				<Button severity="danger" text onClick={handleLogout}>
-					<i className="pi pi-power-off" />
-				</Button>
-			</div>
-		</>
-	)
+        <div className="flex align-items-center gap-2">
+            <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" />
+        </div>
+    );
 
 	const items = [
 		{
-			label: "Trang chủ",
-			icon: "",
-			command: () => {
-				navigate("/manager/home")
-			},
-		},
-		{
 			label: "Địa điểm",
-			icon: "",
+			icon: "pi pi-map-marker",
 			command: () => {
 				navigate("/manager/place")
 			},
 		},
 		{
 			label: "Danh mục",
-			icon: "",
+			icon: "pi pi-list",
 			command: () => {
 				navigate("/manager/category")
 			},
@@ -74,7 +76,7 @@ export default function Manager() {
 		},
 		{
 			label: "Cụm điểm",
-			icon: "",
+			icon: "pi pi-th-large",
 			command: () => {
 				navigate("/manager/cluster")
 			},
@@ -82,7 +84,7 @@ export default function Manager() {
 		},
 		{
 			label: "Người dùng",
-			icon: "",
+			icon: "pi pi-user",
 			command: () => {
 				navigate("/manager/user")
 			},
@@ -94,8 +96,10 @@ export default function Manager() {
 	return (
 		<>
 			<GlobalStyles>
-				<div className="h-screen">
-					<Menubar model={items} className="w-full bg-primary-reverse" end={end}></Menubar>
+				<div>
+						{/* <div className="card" style={{ textDecoration: 'none' }}>
+							<Menubar model={items}  end={end} style={{ textDecoration: 'none' }}></Menubar>
+						</div> */}
 					<div>
 						<Routes>
 							<Route path="/" element={<Map />} />

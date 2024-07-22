@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Sidebar from '../Slidebar';
-import MapWithPanel from '../../V2/components/MapWithPanel';
 
-const App = () => {
+import Category from '../../Component/Category';
+
+const CategoryPage = () => {
   const [isSidebarActive, setIsSidebarActive] = useState(false);
-  const [activeItem, setActiveItem] = useState('Bản đồ'); 
+  const [activeItem, setActiveItem] = useState('Thể loại'); 
 
   const toggleSidebar = () => {
     setIsSidebarActive(!isSidebarActive);
@@ -23,11 +24,13 @@ const App = () => {
         onItemClick={handleItemClick} 
       />
       <div className="home_content bg-white" >
-        <div className="text background-image"><h3 style={{color:"white"}}>BẢN ĐỒ DU LỊCH TỰ NHIÊN TỈNH BẮC KẠN</h3></div>
-        <MapWithPanel/>
+        <div className="text">BẢN ĐỒ DU LỊCH TỰ NHIÊN TỈNH BẮC KẠN</div>
+        <div bg="light" className='p-2  bg-light border-top' 	style={{ height: "100%" }}>
+          <Category/>
+        </div>
       </div>
     </>
   );
 };
 
-export default App;
+export default CategoryPage;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import "primeflex/primeflex.css"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { Button } from "primereact/button"
+import Button from "react-bootstrap/Button";
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
 import { Dropdown } from "primereact/dropdown"
@@ -77,11 +77,13 @@ export default function Category() {
 
 	const handleDeleteClick = async (rowData) => {
 		const url = `${process.env.REACT_APP_API_URL}/category/deleteCategory?id=${rowData.id}`
+		const token = sessionStorage.getItem('access_token');
 
 		const response = await fetch(url, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
+				'Authorization': `Bearer ${token}` 
 			},
 		})
 		const result = await response.json()
@@ -92,6 +94,8 @@ export default function Category() {
 	}
 
 	const handleSaveCategory = async () => {
+		const token = sessionStorage.getItem('access_token');
+
 		if (!id) {
 			const url = `${process.env.REACT_APP_API_URL}/category/createCategory`
 			const category = {
@@ -104,10 +108,14 @@ export default function Category() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					'Authorization': `Bearer ${token}` 
+					
 				},
 				body: JSON.stringify(category),
 			})
 			const result = await response.json()
+			console.log(result);
+			
 			if (result) {
 				handleHideForm()
 				toast.current.show({ severity: "success", summary: "Info", detail: "Category is created" })
@@ -124,6 +132,7 @@ export default function Category() {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					'Authorization': `Bearer ${token}` 
 				},
 				body: JSON.stringify(category),
 			})
@@ -140,10 +149,16 @@ export default function Category() {
 	const actionsBodyTemplate = (rowData) => {
 		return (
 			<>
-				<Button severity="info" text onClick={() => handleEditClick(rowData)}>
+				<Button 
+				className="m-2"
+				variant="secondary"
+				severity="info" text onClick={() => handleEditClick(rowData)}>
 					<i className="pi pi-pencil" />
 				</Button>
-				<Button severity="danger" text onClick={() => handleDeleteClick(rowData)}>
+				<Button 
+				className="m-2"
+				variant="warning"
+				severity="danger" text onClick={() => handleDeleteClick(rowData)}>
 					<i className="pi pi-trash" />
 				</Button>
 			</>
@@ -151,9 +166,17 @@ export default function Category() {
 	}
 
 	return (
-		<>
+		<div  className="container-fluid">
 			<Toast ref={toast} />
-			<Button className="mt-2" label="Thêm mới" onClick={() => handleAddCategory()}></Button>
+			<div className="d-flex justify-content-end">
+				<Button
+				className="mt-2 "
+				onClick={() => handleAddCategory()}
+				>
+				Thêm mới
+				</Button>
+			</div>
+			{/* <Button className="mt-2" label="Thêm mới" onClick={() => handleAddCategory()}></Button> */}
 			<DataTable className="mt-2" value={products} tableStyle={{ minWidth: "50rem" }} paginator rows={10} rowsPerPageOptions={[5, 10, 25, 50]}>
 				<Column field="title" header="Tiêu đề"></Column>
 				<Column field="image" header="Hình ảnh"></Column>
@@ -187,10 +210,10 @@ export default function Category() {
 				</div>
 
 				<div className="mt-5 flex justify-content-evenly flex-wrap">
-					<Button label="Lưu lại" severity="success" onClick={handleSaveCategory}></Button>
-					<Button className="ml-1" label="Hủy" severity="danger" onClick={() => handleHideForm()}></Button>
+					<Button onClick={handleSaveCategory}>Lưu lại</Button>
+					<Button variant="warning" onClick={() => handleHideForm()}>Hủy</Button>
 				</div>
 			</Dialog>
-		</>
+		</div>
 	)
 }

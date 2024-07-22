@@ -1,12 +1,35 @@
 import React from 'react';
+import { Routes, Route, useNavigate /* NavLink */ } from "react-router-dom"
+
 
 const Sidebar = ({ isActive, toggleSidebar, activeItem, onItemClick }) => {
-  const menuItems = [
-    { name: 'Bản đồ', icon: 'bx bx-map-alt', link: '/' },
-    // { name: 'Địa điểm', icon: 'bx bx-spreadsheet' },
-    { name: 'Giới thiệu', icon: 'bx bx-pie-chart-alt-2' , link: '#/about'},
-    { name: 'Liên hệ', icon: 'bx bx-chat', link: '#/contact' },
-  ];
+
+  const navigate = useNavigate()
+
+  let menuItems = [];
+
+  if(sessionStorage.getItem("isLoggedIn") == "true"){
+    menuItems = [
+      { name: 'Bản đồ', icon: 'bx bx-map-alt', link: '/' },
+      { name: 'Địa điểm', icon: 'bx bx-spreadsheet', link: '#/place' },
+      { name: 'Thể loại', icon: 'bx bx-category', link: '#/category' },
+      { name: 'Cụm điểm', icon: 'bx bx-dice-3', link: '#/cluster' },
+      { name: 'Người dùng', icon: 'bx bx-user', link: '#/user' },
+      { name: 'Giới thiệu', icon: 'bx bx-pie-chart-alt-2' , link: '#/about'},
+      { name: 'Liên hệ', icon: 'bx bx-chat', link: '#/contact' },
+    ];
+  }else{
+    menuItems = [
+      { name: 'Bản đồ', icon: 'bx bx-map-alt', link: '/' },
+      { name: 'Giới thiệu', icon: 'bx bx-pie-chart-alt-2' , link: '#/about'},
+      { name: 'Liên hệ', icon: 'bx bx-chat', link: '#/contact' },
+    ];
+  }
+
+  const handleLogout = () => {
+		sessionStorage.removeItem("isLoggedIn")
+		navigate("/")
+	}
 
   return (
     <div className={`sidebar ${isActive ? 'active' : ''} bg-light`}>
@@ -32,7 +55,10 @@ const Sidebar = ({ isActive, toggleSidebar, activeItem, onItemClick }) => {
           </li>
         ))}
       </ul>
-      <div className="profile_content">
+      {
+        sessionStorage.getItem("isLoggedIn") == "true" ? 
+
+        <div className="profile_content">
         <div className="profile">
           <div className="profile_details">
             <img src="" alt="user" />
@@ -41,9 +67,12 @@ const Sidebar = ({ isActive, toggleSidebar, activeItem, onItemClick }) => {
               <div className="job">Web Designer</div>
             </div>
           </div>
-          <i className='bx bx-log-out' id="log_out"></i>
+          <i className='bx bx-log-out' id="log_out" onClick={handleLogout}></i>
         </div>
-      </div>
+      </div>:
+      <></>
+      }
+     
     </div>
   );
 };

@@ -16,6 +16,8 @@ import Relic from "../../Images/relic.png";
 import Reserve from "../../Images/reserve.png";
 import Terraces from "../../Images/terraces.png";
 import Waterfall from "../../Images/waterfall.png";
+import DaMyNghe from "../../Images/damynghe.png";
+
 
 import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
@@ -67,6 +69,9 @@ const MapWithPanel = () => {
         break;
       case 1: // cảnh quan ruộng bậc thang
         iconUrl = Terraces;
+        break;
+      case 12: // Đá mỹ nghệ
+        iconUrl = DaMyNghe;
         break;
       default:
         iconUrl = Location;

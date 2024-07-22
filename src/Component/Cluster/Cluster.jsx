@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import "primeflex/primeflex.css"
 import { DataTable } from "primereact/datatable"
 import { Column } from "primereact/column"
-import { Button } from "primereact/button"
+import Button from "react-bootstrap/Button";
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
 import { Toast } from "primereact/toast"
@@ -64,11 +64,13 @@ export default function Cluster() {
 
 	const handleDeleteClick = async (rowData) => {
 		const url = `${process.env.REACT_APP_API_URL}/cluster/deleteCluster?id=${rowData.id}`
+		const token = sessionStorage.getItem('access_token');
 
 		const response = await fetch(url, {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
+				'Authorization': `Bearer ${token}` 
 			},
 		})
 		const result = await response.json()
@@ -79,6 +81,8 @@ export default function Cluster() {
 	}
 
 	const handleSaveCluster = async () => {
+		const token = sessionStorage.getItem('access_token');
+
 		if (!id) {
 			const url = `${process.env.REACT_APP_API_URL}/cluster/createCluster`
 			const cluster = {
@@ -90,6 +94,7 @@ export default function Cluster() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					'Authorization': `Bearer ${token}` 
 				},
 				body: JSON.stringify(cluster),
 			})
@@ -109,6 +114,7 @@ export default function Cluster() {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
+					'Authorization': `Bearer ${token}` 
 				},
 				body: JSON.stringify(cluster),
 			})
@@ -125,10 +131,16 @@ export default function Cluster() {
 	const actionsBodyTemplate = (rowData) => {
 		return (
 			<>
-				<Button severity="info" text onClick={() => handleEditClick(rowData)}>
+				<Button 
+					severity="info" 
+					className="m-2"
+					variant="secondary"
+					text onClick={() => handleEditClick(rowData)}>
 					<i className="pi pi-pencil" />
 				</Button>
-				<Button severity="danger" text onClick={() => handleDeleteClick(rowData)}>
+				<Button  className="m-2 text-white"
+          variant="warning"
+		  onClick={() => handleDeleteClick(rowData)}>
 					<i className="pi pi-trash" />
 				</Button>
 			</>
@@ -136,9 +148,17 @@ export default function Cluster() {
 	}
 
 	return (
-		<>
+		<div className="container-fluid">
 			<Toast ref={toast} />
-			<Button className="mt-2" label="Thêm mới" onClick={() => handleAddCluster()}></Button>
+			<div className="d-flex justify-content-end">
+				<Button
+				className="mt-2 "
+				label="Thêm mới"
+				onClick={() => handleAddCluster()}
+				>
+				Thêm mới
+				</Button>
+			</div>
 			<DataTable className="mt-2" value={clusters} tableStyle={{ minWidth: "50rem" }} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
 				<Column field="title" header="Tiêu đề"></Column>
 				<Column field="image" header="Hình ảnh"></Column>
@@ -158,10 +178,10 @@ export default function Cluster() {
 				</div>
 
 				<div className="mt-5 flex justify-content-evenly flex-wrap">
-					<Button label="Lưu lại" severity="success" onClick={handleSaveCluster}></Button>
-					<Button className="ml-1" label="Hủy" severity="danger" onClick={() => handleHideForm()}></Button>
+					<Button onClick={handleSaveCluster}>Lưu lại</Button>
+					<Button className="ml-1" variant="warning" onClick={() => handleHideForm()}>Hủy</Button>
 				</div>
 			</Dialog>
-		</>
+		</div>
 	)
 }
